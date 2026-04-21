@@ -1,0 +1,48 @@
+assembly: GRCh37
+window_bp: 500000
+min_variants_per_locus: 10
+
+paths:
+  cleaned_summary_stats: data/interim/ckdgen_egfr_cleaned.tsv
+  lead_variants: results/tables/lead_variants.tsv
+  lead_loci: results/tables/lead_loci.tsv
+  locus_windows_dir: results/loci
+  fine_mapping_root: results/fine_mapping
+  bundles_dir: results/fine_mapping/loci_inputs
+  susie_raw_dir: results/fine_mapping/susie_raw
+  ld_matrix_dir_candidates:
+    - data/reference/ld
+    - data/reference/Ld
+
+required_columns:
+  - CHR
+  - BP
+  - SNP
+  - BETA
+  - SE
+
+output_contract:
+  summary_stats_filename: summary_stats.tsv
+  zscores_filename: zscores.tsv
+  metadata_filename: metadata.yaml
+  ld_matrix_filename: ld_matrix.tsv
+
+susie:
+  rscript_template: scripts/susie_run_template.R
+  expected_output_files:
+    - pip.tsv
+    - credible_sets.tsv
+    - susie_fit.rds
+  expected_output_columns:
+    pip:
+      - SNP
+      - PIP
+    credible_sets:
+      - credible_set_id
+      - SNP
+
+ld_contract:
+  expected_description: |
+    One LD matrix per locus (or per chromosome-locus contract) aligned to locus SNP ordering.
+    Recommended format is tab-delimited with first column 'SNP' and remaining numeric LD matrix columns.
+    Matrix must be square and SNP order must match rows/columns.

@@ -1,0 +1,14 @@
+locus_id	benchmark_status	error_message	susie_top_variant	susie_max_pip	susie_credible_set_count	susie_runtime_sec	finemap_top_variant	finemap_max_posterior	finemap_credible_set_count	finemap_runtime_sec	overlap_flag
+chr11_locus7	success	""	11:30760335:T:C	1.0	2		11:30774737:A:C	1.0		4.789059458	false
+chr15_locus8	success	""	15:76376608:T:G	1.0	2		15:76188748:T:C	1.0		10.475345083	false
+chr17_locus8	success	""	17:59447984:A:G	1.0	10		17:59139596:T:C	1.0		4.338690667000002	false
+chr18_locus5	success	""	18:77155419:T:C	1.0	8		18:77164243:A:G	1.0		0.7019477909999985	false
+chr2_locus11	success	""	2:73858965:T:C	1.0	5		2:73894036:T:C	1.0		3.771895999999998	false
+chr2_locus27	success	""	2:211246287:A:C	1.0	4		2:211614638:T:G	1.0		7.5730833749999995	false
+chr2_locus5	success	""	2:27734972:A:G	1.0	8		2:28416884:T:G	1.0		7.178144416999999	false
+chr5_locus11	success	""	5:176817143:T:G	1.0	4		5:176792743:A:G	1.0		2.7062669170000007	false
+chr6_locus7	success	""	6:43806335:T:C	1.0	2		6:43820215:A:G	1.0		7.575630290999996	false
+chr7_locus0	success	""	7:1286244:A:G	1.0	2		7:1286244:A:G	1.0		0.6230754159999989	true
+chr7_locus19	success	""	7:151405818:T:C	1.0	6		7:151413124:T:C	1.0		0.9782121249999989	false
+chr8_locus2	success	""	8:23714992:A:G	1.0	8		8:23769618:A:G	1.0		2.606280459000004	false
+chr9_locus2	success	""	9:71426328:T:C	1.0	6		9:71443540:A:G	1.0		5.295233291000002	false

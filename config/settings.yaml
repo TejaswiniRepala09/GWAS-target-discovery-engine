@@ -1,0 +1,65 @@
+project:
+  name: "ckd-target-discovery"
+  phenotype: "eGFR"
+  trait_description: "Estimated glomerular filtration rate as a kidney function phenotype."
+  assembly: "GRCh37"
+
+paths:
+  input_summary_stats: "data/raw/metal_eGFR_meta1.TBL.map.annot.gc.gz"
+  cleaned_summary_stats: "data/interim/ckdgen_egfr_cleaned.tsv"
+  qc_table_prefix: "results/tables/qc"
+  top_hits_output: "results/tables/top_hits.tsv"
+  lead_variants_output: "results/tables/lead_variants.tsv"
+  lead_loci_output: "results/tables/lead_loci.tsv"
+  vep_output: "results/tables/vep_input.tsv"
+  locus_output_dir: "results/loci"
+  database_path: "data/processed/ckd_target_discovery.duckdb"
+  log_file: "results/logs/pipeline.log"
+  phase2_log_file: "results/logs/phase2.log"
+  phase2_report: "results/reports/phase2_summary.md"
+
+analysis:
+  pvalue_preference_order:
+    - "P_GC"
+    - "P"
+  selected_pvalue_column: "P_ANALYSIS"
+  autosomes_only: true
+  chromosome_min: 1
+  chromosome_max: 22
+  genome_wide_significance_threshold: 5.0e-8
+  suggestive_significance_threshold: 1.0e-5
+  lead_locus_distance_bp: 500000
+  susie_window_bp: 500000
+  top_hits_n: 20
+  downsample_for_manhattan: true
+  manhattan_non_sig_max_points: 200000
+
+plotting:
+  dpi: 300
+  style:
+    font_size: 12
+    title_size: 14
+    point_size: 4
+    alpha: 0.8
+
+phase2:
+  enabled: true
+  strict_validation: false
+  required_assembly: "GRCh37"
+  outputs:
+    annotations_dir: "results/annotations"
+    fine_mapping_dir: "results/fine_mapping"
+    target_prioritization_dir: "results/target_prioritization"
+    structure_dir: "results/structure"
+    reports_dir: "results/reports"
+  references:
+    ld_dir_candidates:
+      - "data/reference/ld"
+      - "data/reference/Ld"
+    genes_dir: "data/reference/genes"
+    vep_cache_dir: "data/reference/vep"
+  external_cache:
+    opentargets_cache: "data/external/opentargets_cache"
+    uniprot_cache: "data/external/uniprot_cache"
+    pdb_cache: "data/external/pdb_cache"
+    alphafold_cache: "data/external/alphafold_cache"

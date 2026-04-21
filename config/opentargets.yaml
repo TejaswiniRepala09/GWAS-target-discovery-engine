@@ -1,0 +1,16 @@
+assembly: GRCh37
+opentargets:
+  base_url: https://api.platform.opentarget.org/v4/graphql
+  timeout_seconds: 25
+  enabled: true
+
+paths:
+  cache_dir: data/external/opentargets_cache
+  output_tsv: results/target_prioritization/opentargets_evidence.tsv
+
+query:
+  disease_efo_id: EFO_0003884
+  page_size: 25
+
+warnings:
+  symbol_query_ambiguity: true

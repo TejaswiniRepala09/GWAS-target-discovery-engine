@@ -1,0 +1,24 @@
+assembly: GRCh37
+
+apis:
+  uniprot_base_url: https://rest.uniprot.org
+  pdb_base_url: https://data.rcsb.org/rest/v1/core/entry
+  alphafold_base_url: https://alphafold.ebi.ac.uk/api
+  timeout_seconds: 20
+
+paths:
+  uniprot_cache_dir: data/external/uniprot_cache
+  pdb_cache_dir: data/external/pdb_cache
+  alphafold_cache_dir: data/external/alphafold_cache
+  protein_mapping_output: results/structure/protein_mapping.tsv
+  structure_candidates_output: results/structure/structure_candidates.tsv
+  structural_summary_output: results/structure/structural_interpretation_summary.tsv
+  max_genes_query: 50
+
+consequence_keywords:
+  - missense_variant
+  - stop_gained
+  - stop_lost
+  - frameshift_variant
+  - start_lost
+  - protein_altering_variant

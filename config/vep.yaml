@@ -1,0 +1,56 @@
+assembly: GRCh37
+mode: parser_only
+
+paths:
+  vep_input: results/tables/vep_input.tsv
+  vep_raw_dir: results/annotations/vep_raw
+  vep_raw_output: results/annotations/vep_raw/vep_output.tsv
+  vep_formatted_input: results/annotations/vep_raw/vep_input_ensembl.tsv
+  variant_annotations_output: results/annotations/variant_annotations.tsv
+  variant_consequence_scores_output: results/annotations/variant_consequence_scores.tsv
+
+local_vep:
+  executable: vep
+  offline: true
+  cache_dir: data/reference/vep
+  fork: 4
+  stats_file: results/annotations/vep_raw/vep_summary.html
+  log_file: results/logs/phase2_vep.log
+
+required_input_columns:
+  - CHR
+  - BP
+  - A1
+  - A2
+
+expected_output_columns:
+  - Uploaded_variation
+  - Location
+  - Allele
+  - Gene
+  - SYMBOL
+  - Consequence
+  - IMPACT
+  - Feature
+  - HGVSc
+  - HGVSp
+  - Amino_acids
+  - Protein_position
+  - Existing_variation
+
+consequence_weights:
+  HIGH: 1.0
+  MODERATE: 0.7
+  LOW: 0.3
+  MODIFIER: 0.1
+
+consequence_keyword_scores:
+  stop_gained: 1.0
+  frameshift_variant: 1.0
+  splice_acceptor_variant: 0.95
+  splice_donor_variant: 0.95
+  missense_variant: 0.75
+  protein_altering_variant: 0.65
+  synonymous_variant: 0.2
+  intron_variant: 0.1
+  upstream_gene_variant: 0.1

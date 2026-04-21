@@ -1,0 +1,21 @@
+locus_id	chromosome	step_reached	success	error_message	n_variants_input	n_variants_after_harmonization	susie_converged	diagnostics_flag
+chr11_locus7	11	plots	true		1431	1209	true	false
+chr15_locus2	15	susie_run	false	RuntimeError: Command failed (1): Rscript scripts/susie_run_template.R /Users/tejurepala/mywork/CKD_proj/results/fine_mapping/loci_inputs/chr15_locus2/summary_stats_harmonized.tsv /Users/tejurepala/mywork/CKD_proj/results/fine_mapping/loci_inputs/chr15_locus2/ld_matrix.tsv /Users/tejurepala/mywork/CKD_proj/results/fine_mapping/susie_raw/chr15_locus2	2522	1259	false	
+chr15_locus8	15	plots	true	""	2091	4734	true	false
+chr16_locus1	16	susie_run	false	RuntimeError: Command failed (1): Rscript scripts/susie_run_template.R /Users/tejurepala/mywork/CKD_proj/results/fine_mapping/loci_inputs/chr16_locus1/summary_stats_harmonized.tsv /Users/tejurepala/mywork/CKD_proj/results/fine_mapping/loci_inputs/chr16_locus1/ld_matrix.tsv /Users/tejurepala/mywork/CKD_proj/results/fine_mapping/susie_raw/chr16_locus1	2846	1678	false	
+chr17_locus5	17	susie_run	false	RuntimeError: Command failed (1): Rscript scripts/susie_run_template.R /Users/tejurepala/mywork/CKD_proj/results/fine_mapping/loci_inputs/chr17_locus5/summary_stats_harmonized.tsv /Users/tejurepala/mywork/CKD_proj/results/fine_mapping/loci_inputs/chr17_locus5/ld_matrix.tsv /Users/tejurepala/mywork/CKD_proj/results/fine_mapping/susie_raw/chr17_locus5	2581	2217	false	false
+chr17_locus8	17	plots	true		1203	1027	true	false
+chr18_locus5	18	plots	true		158	140	true	false
+chr19_locus4	19	susie_run	false	RuntimeError: Command failed (1): Rscript scripts/susie_run_template.R /Users/tejurepala/mywork/CKD_proj/results/fine_mapping/loci_inputs/chr19_locus4/summary_stats_harmonized.tsv /Users/tejurepala/mywork/CKD_proj/results/fine_mapping/loci_inputs/chr19_locus4/ld_matrix.tsv /Users/tejurepala/mywork/CKD_proj/results/fine_mapping/susie_raw/chr19_locus4	1805	1564	false	false
+chr2_locus11	2	plots	true		1186	988	true	false
+chr2_locus27	2	plots	true		2039	1714	true	false
+chr2_locus5	2	plots	true		2458	2113	true	false
+chr4_locus6	4	susie_run	false	RuntimeError: Command failed (1): Rscript scripts/susie_run_template.R /Users/tejurepala/mywork/CKD_proj/results/fine_mapping/loci_inputs/chr4_locus6/summary_stats_harmonized.tsv /Users/tejurepala/mywork/CKD_proj/results/fine_mapping/loci_inputs/chr4_locus6/ld_matrix.tsv /Users/tejurepala/mywork/CKD_proj/results/fine_mapping/susie_raw/chr4_locus6	3582	1980	false	
+chr5_locus11	5	plots	true	""	1853	786	true	false
+chr5_locus2	5	susie_run	false	RuntimeError: Command failed (1): Rscript scripts/susie_run_template.R /Users/tejurepala/mywork/CKD_proj/results/fine_mapping/loci_inputs/chr5_locus2/summary_stats_harmonized.tsv /Users/tejurepala/mywork/CKD_proj/results/fine_mapping/loci_inputs/chr5_locus2/ld_matrix.tsv /Users/tejurepala/mywork/CKD_proj/results/fine_mapping/susie_raw/chr5_locus2	3486	3464	false	
+chr6_locus17	6	susie_run	false	RuntimeError: Command failed (1): Rscript scripts/susie_run_template.R /Users/tejurepala/mywork/CKD_proj/results/fine_mapping/loci_inputs/chr6_locus17/summary_stats_harmonized.tsv /Users/tejurepala/mywork/CKD_proj/results/fine_mapping/loci_inputs/chr6_locus17/ld_matrix.tsv /Users/tejurepala/mywork/CKD_proj/results/fine_mapping/susie_raw/chr6_locus17	2037	1743	false	false
+chr6_locus7	6	plots	true		1991	1725	true	false
+chr7_locus0	7	plots	true	""	3597	144	true	false
+chr7_locus19	7	plots	true	""	2943	288	true	false
+chr8_locus2	8	plots	true		604	511	true	false
+chr9_locus2	9	plots	true		1519	1280	true	false

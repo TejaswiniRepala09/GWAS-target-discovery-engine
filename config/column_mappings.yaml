@@ -1,0 +1,40 @@
+required_columns:
+  - CHR
+  - BP
+
+optional_columns:
+  - SNP
+  - A1
+  - A2
+  - EAF
+  - BETA
+  - SE
+  - P_GC
+  - SE_GC
+  - N
+  - DIRECTION
+  - MAC
+
+canonical_mappings:
+  chr: CHR
+  Chr: CHR
+  pos: BP
+  Pos: BP
+  RSID: SNP
+  MarkerName: MARKERNAME
+  Allele1: A1
+  Allele2: A2
+  Freq1: EAF
+  Effect: BETA
+  StdErr: SE
+  StdErr.GC: SE_GC
+  P-value: P
+  P.value: P
+  P.value.GC: P_GC
+  n: N
+  Direction: DIRECTION
+  mac: MAC
+
+pvalue_priority:
+  - P_GC
+  - P
