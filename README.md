@@ -16,6 +16,62 @@ Notes:
 - External prerequisites for full reproducibility include PLINK, bcftools/tabix, R + `susieR`, Docker (for VEP), and FINEMAP wrapper/binary.
 - If you only want to inspect completed outputs, skip compute and open files under `results/reports/`, `results/fine_mapping/`, `results/target_prioritization/`, and `results/database/`.
 
+## Nextflow Orchestration (Lightweight, Real Wrapper)
+
+This repository includes a DSL2 Nextflow wrapper that orchestrates existing working scripts without changing scientific logic.
+
+Verified local prerequisites (macOS):
+- Java 17+ (`openjdk@17` recommended)
+- Nextflow 25.x
+
+Install (verified):
+
+```bash
+brew install openjdk@17 nextflow
+```
+
+Environment setup (recommended before running Nextflow):
+
+```bash
+export PATH="/opt/homebrew/opt/openjdk@17/bin:$PATH"
+export NXF_HOME="$PWD/.nxf_home"
+```
+
+Files:
+- `nextflow.config`
+- `main.nf`
+- `modules/pipeline_processes.nf`
+- `workflows/phase2_orchestration.nf`
+
+Stage mapping:
+1. Locus selection / batch setup -> `scripts/run_phase2_multi_locus.py`
+2. VEP annotation -> internal in `run_phase2_multi_locus.py`
+3. LD extraction + harmonization -> internal in `run_phase2_multi_locus.py`
+4. SuSiE fine-mapping -> internal in `run_phase2_multi_locus.py`
+5. Prioritization -> internal in `run_phase2_multi_locus.py`
+6. Integration/reporting -> `scripts/integrate_system_layer.py`
+7. Benchmarking (optional) -> `scripts/run_benchmark.sh`
+
+Run examples:
+
+```bash
+# Lightweight validation (no heavy execution)
+nextflow run main.nf -preview --mode top_n --max_loci 1 --locus_ids 'chr7_locus10' --continue_on_error true
+
+# One locus (explicit locus ID)
+nextflow run main.nf --mode top_n --max_loci 1 --locus_ids 'chr7_locus10' --continue_on_error true
+
+# Chromosome subset
+nextflow run main.nf --mode chromosome --chromosomes '7,8' --max_loci 10 --continue_on_error true
+
+# Top 10 loci genome-wide with benchmark
+nextflow run main.nf --mode top_n --max_loci 10 --continue_on_error true --run_benchmark true
+```
+
+Validation notes:
+- `-preview` validates wiring/config without running heavy pipeline steps.
+- In restricted-network environments, Nextflow may show a harmless update-check warning (`Could not resolve host: www.nextflow.io`) while still validating the workflow graph.
+
 ## Key Results at a Glance
 
 ### 1) Runtime comparison (SuSiE vs FINEMAP)
@@ -107,6 +163,24 @@ This repository implements an end-to-end translational pipeline:
 | PostgreSQL export | Optional | Yes | `psycopg`, PostgreSQL instance | Triggered via `TARGET_DISCOVERY_PG_DSN` or `--postgres-dsn`. |
 | FINEMAP benchmarking | Yes | Yes | FINEMAP wrapper/binary, Python, plotting libs | Uses existing successful-locus cohort and continue-on-error behavior. |
 
+## Colocalization / Target-Gene Confidence Layer
+
+To strengthen non-coding locus interpretation, this repo now includes a coloc-ready representative-loci layer:
+
+```bash
+python scripts/run_coloc_representative_loci.py
+```
+
+Outputs:
+- `results/coloc/<locus_id>/gwas_coloc_input.tsv`
+- `results/coloc/<locus_id>/eqtl_input_template.tsv`
+- `results/coloc/coloc_status.tsv`
+- `results/reports/coloc_summary.md`
+
+Current status:
+- Full coloc posterior inference is not run by default because matched eQTL summary statistics are not yet committed.
+- The layer is designed to be honest and reproducible: it prepares exact GWAS-side inputs and documents what is missing for production-grade shared-signal testing.
+
 ## Data Model / Database Schema
 
 ### DuckDB integration tables
@@ -154,6 +228,33 @@ HAVING MAX(pip) >= 0.50
 ORDER BY max_pip DESC;
 ```
 
+## Testing and CI
+
+This repo includes lightweight reliability checks on every push/PR via GitHub Actions:
+
+- Python syntax validation for `scripts/` and `src/`
+- Output contract validation for key committed TSV artifacts
+
+Contract checks verify:
+- file exists
+- TSV is readable
+- expected columns are present
+- key columns are not entirely null/empty
+
+Checked files:
+- `results/fine_mapping/pip_summary.tsv`
+- `results/fine_mapping/credible_sets.tsv`
+- `results/target_prioritization/variant_priority_scores.tsv`
+- `results/target_prioritization/gene_prioritization.tsv`
+- `results/reports/multi_locus_status.tsv`
+- `results/benchmarking/susie_vs_finemap_locus_summary.tsv`
+
+Run locally:
+
+```bash
+python scripts/check_output_contracts.py
+```
+
 ## Repository Layout
 
 ```text
@@ -172,6 +273,11 @@ results/
   database/                 # DuckDB + exported integration tables
   loci/<locus_id>/          # per-locus organized artifacts
 ```
+
+Folder guides:
+- `docs/README.md`
+- `scripts/README.md`
+- `results/README.md`
 
 ## Where To See Final Results
 

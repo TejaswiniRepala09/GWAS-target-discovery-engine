@@ -12,6 +12,12 @@ env/
 *.log
 *.tmp
 tools/ensembl-vep/
+.nextflow*
+.nextflow/
+.nextflow.log
+.nxf_home/
+work/
+readme.txt
 
 # Large generated outputs
 results/plots/*.png
