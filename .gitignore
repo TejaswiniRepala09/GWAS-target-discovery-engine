@@ -46,3 +46,13 @@ docs/private/
 !data/reference/.gitkeep
 !data/processed/.gitkeep
 !data/external/.gitkeep
+
+# Local-heavy folders (keep repo status clean)
+data/
+tools/
+results/loci/
+results/annotations/chr*/
+results/target_prioritization/chr*/
+results/plots/phase2/
+results/structure/
+notebooks/.ipynb_checkpoints/
