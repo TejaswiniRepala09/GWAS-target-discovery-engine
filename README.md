@@ -18,14 +18,69 @@ Notes:
 
 ## Key Results at a Glance
 
-### 1) Representative locus association pattern (chr7_locus19)
-![chr7_locus19 locus plot](results/plots/phase2/chr7_locus19_locus_plot.png)
+### 1) Runtime comparison (SuSiE vs FINEMAP)
+![SuSiE vs FINEMAP runtime](results/plots/benchmarking/susie_vs_finemap_runtime.png)
 
-### 2) Fine-mapping posterior support (chr7_locus19 PIP)
-![chr7_locus19 PIP plot](results/plots/phase2/chr7_locus19_pip_plot.png)
-
-### 3) Cross-method benchmark agreement (SuSiE vs FINEMAP)
+### 2) Cross-method benchmark agreement (top variant overlap)
 ![SuSiE vs FINEMAP top-variant overlap](results/plots/benchmarking/susie_vs_finemap_top_variant_overlap.png)
+
+### 3) Credible-set size comparison
+![SuSiE vs FINEMAP credible set sizes](results/plots/benchmarking/susie_vs_finemap_credible_set_sizes.png)
+
+## Pipeline Architecture Diagram
+
+```mermaid
+flowchart LR
+    A[GWAS Summary Statistics] --> B[QC + Lead Loci]
+    B --> C[Per-Locus Input Bundles]
+    C --> D[VEP Annotation Parsing]
+    C --> E[Region-Based LD Extraction]
+    E --> F[SNP Harmonization + LD Validation]
+    F --> G[SuSiE Fine-Mapping]
+    D --> H[Variant Functional Scoring]
+    G --> H
+    H --> I[Variant + Gene Prioritization]
+    I --> J[DuckDB Integration]
+    J --> K[PostgreSQL Export]
+    G --> L[FINEMAP Benchmark]
+    I --> M[Reports + Plots]
+    L --> M
+```
+
+## Project Architecture Diagram
+
+```mermaid
+flowchart TB
+    subgraph Compute["Computation Layer"]
+      S1[scripts/run_pipeline.py]
+      S2[scripts/run_phase2_multi_locus.py]
+      S3[scripts/run_benchmark.sh]
+    end
+
+    subgraph Data["Data + Results Layer"]
+      D1[results/fine_mapping/*.tsv]
+      D2[results/annotations/*.tsv]
+      D3[results/target_prioritization/*.tsv]
+      D4[results/reports/*.md]
+      D5[results/plots/benchmarking/*.png]
+    end
+
+    subgraph System["System Integration Layer"]
+      DB1[(DuckDB: target_discovery.duckdb)]
+      DB2[(PostgreSQL: loci / variants / genes)]
+    end
+
+    S1 --> D1
+    S2 --> D1
+    S2 --> D2
+    S2 --> D3
+    S2 --> D4
+    S3 --> D5
+    D1 --> DB1
+    D2 --> DB1
+    D3 --> DB1
+    DB1 --> DB2
+```
 
 ## What This Project Does
 
