@@ -93,7 +93,6 @@ Interpretation:
 5. Add CI checks for key output contracts and schema consistency.
 
 ## Final Status
-This project is now end-to-end enough for portfolio/recruiter review:
 - full association-to-prioritization flow,
 - per-locus artifacts and plots,
 - system integration (DuckDB + PostgreSQL),
