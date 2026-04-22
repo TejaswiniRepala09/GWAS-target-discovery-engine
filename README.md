@@ -402,4 +402,4 @@ See methods docs:
 
 ## License / Use
 
-This repository is intended for research, reproducible methods demonstration, and portfolio/interview presentation.
+This repository is intended for research, reproducible methods demonstration, and portfolio presentation.
