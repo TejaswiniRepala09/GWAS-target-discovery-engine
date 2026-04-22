@@ -2,6 +2,31 @@
 
 Genetics-driven target discovery workflow for CKD that extends GWAS signal discovery into fine-mapping, annotation, gene prioritization, systems integration, and benchmark comparison.
 
+## Quickstart in 5 Commands
+
+```bash
+git clone https://github.com/TejaswiniRepala09/GWAS-target-discovery-engine.git
+cd GWAS-target-discovery-engine
+python3 -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt
+python scripts/run_phase2_multi_locus.py --mode top_n --max-loci 20 --continue-on-error
+python scripts/integrate_system_layer.py && bash scripts/run_benchmark.sh
+```
+
+Notes:
+- External prerequisites for full reproducibility include PLINK, bcftools/tabix, R + `susieR`, Docker (for VEP), and FINEMAP wrapper/binary.
+- If you only want to inspect completed outputs, skip compute and open files under `results/reports/`, `results/fine_mapping/`, `results/target_prioritization/`, and `results/database/`.
+
+## Key Results at a Glance
+
+### 1) Representative locus association pattern (chr7_locus19)
+![chr7_locus19 locus plot](results/plots/phase2/chr7_locus19_locus_plot.png)
+
+### 2) Fine-mapping posterior support (chr7_locus19 PIP)
+![chr7_locus19 PIP plot](results/plots/phase2/chr7_locus19_pip_plot.png)
+
+### 3) Cross-method benchmark agreement (SuSiE vs FINEMAP)
+![SuSiE vs FINEMAP top-variant overlap](results/plots/benchmarking/susie_vs_finemap_top_variant_overlap.png)
+
 ## What This Project Does
 
 This repository implements an end-to-end translational pipeline:
@@ -14,6 +39,65 @@ This repository implements an end-to-end translational pipeline:
 6. Multi-locus execution with per-locus logs/status
 7. DuckDB analytical integration and optional PostgreSQL export
 8. SuSiE vs FINEMAP benchmark on successful loci
+
+## Reproducibility Matrix
+
+| Step | Runs locally? | Requires external dependency? | Main tools | Notes |
+|---|---|---|---|---|
+| GWAS preprocessing / lead loci | Yes | No (if input TSV already present) | Python, Polars | Requires GWAS summary stats file placement under `data/raw/`. |
+| VEP annotation | Yes | Yes | Docker VEP (`ensemblorg/ensembl-vep`), GRCh37 cache | Offline cache mode expected; reference cache under `data/reference/vep/`. |
+| LD extraction | Yes | Yes | bcftools, tabix, 1000G VCFs | Region-based extraction from chromosome VCF + `.tbi` index. |
+| SuSiE fine-mapping | Yes | Yes | Rscript, `susieR`, PLINK outputs | Requires harmonized summary stats + LD matrix consistency. |
+| DuckDB integration | Yes | No | Python, DuckDB, Polars | Reads existing TSV outputs; does not rerun heavy analysis. |
+| PostgreSQL export | Optional | Yes | `psycopg`, PostgreSQL instance | Triggered via `TARGET_DISCOVERY_PG_DSN` or `--postgres-dsn`. |
+| FINEMAP benchmarking | Yes | Yes | FINEMAP wrapper/binary, Python, plotting libs | Uses existing successful-locus cohort and continue-on-error behavior. |
+
+## Data Model / Database Schema
+
+### DuckDB integration tables
+- `target_variant_table` (`results/database/target_variant_table.tsv`)
+  - Variant-centric integrated view from prioritization + fine-mapping + status.
+  - Key fields: `locus_id`, `variant_id`, `CHR`, `BP`, `PIP`, `credible_set_id`, `consequence`, `variant_priority_score`, `candidate_gene`, `gene_score`, `success`, `susie_converged`, `locus_type`, `eqtl_support_flag`.
+- `target_gene_table` (`results/database/target_gene_table.tsv`)
+  - Gene-centric integrated view for downstream ranking.
+  - Key fields: `locus_id`, `gene`, `max_PIP`, `gene_score`, `eqtl_support_flag`, `locus_type`.
+
+### PostgreSQL export tables
+Defined by `scripts/integrate_system_layer.py`:
+- `loci(locus_id, chromosome, locus_start, locus_end, locus_type, success)`
+- `variants(variant_id, locus_id, chr, bp, pip, credible_set_id, consequence, variant_priority_score)`
+- `genes(gene_symbol, locus_id, gene_score, eqtl_support_flag, candidate_flag)`
+
+## Example Queries
+
+```sql
+-- 1) High-confidence variants across successful loci
+SELECT locus_id, variant_id, pip, consequence, variant_priority_score
+FROM target_variant_table
+WHERE success = TRUE AND pip >= 0.80
+ORDER BY pip DESC, variant_priority_score DESC
+LIMIT 20;
+```
+
+```sql
+-- 2) Top candidate genes by score
+SELECT locus_id, gene, max_PIP, gene_score, locus_type
+FROM target_gene_table
+ORDER BY gene_score DESC, max_PIP DESC
+LIMIT 20;
+```
+
+```sql
+-- 3) Loci with converged SuSiE and strong posterior support
+SELECT locus_id,
+       MAX(pip) AS max_pip,
+       COUNT(*) FILTER (WHERE pip >= 0.10) AS n_supporting_variants
+FROM target_variant_table
+WHERE success = TRUE AND susie_converged = TRUE
+GROUP BY locus_id
+HAVING MAX(pip) >= 0.50
+ORDER BY max_pip DESC;
+```
 
 ## Repository Layout
 
@@ -142,7 +226,9 @@ See methods docs:
 
 ## System / Architecture Docs
 
-- Architecture: `docs/project_architecture.md`
+- Pipeline architecture: `docs/pipeline_architecture.md`
+- Data lineage: `docs/data_lineage.md`
+- Architecture narrative: `docs/project_architecture.md`
 - File map: `docs/project_file_guide.md`
 - Final report: `results/reports/final_project_summary.md`
 
